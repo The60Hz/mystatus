@@ -7,32 +7,65 @@
       font-family: "Arial", sans-serif;
       margin: 0;
       overflow: hidden; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      position: relative;
     }
+    
     h1 {
-      font-size: 5em;
+      font-size: 3em; 
       margin: 0;
       text-align: center;
-      position: absolute;
-      top: 40%;
-      left: 50%;
-      transform: translateX(-50%);
-      display: none; 
       cursor: pointer;
       user-select: none;
-      z-index: 1; 
+      z-index: 10; 
+      display: none; 
+      transition: transform 0.5s ease-in, opacity 0.5s ease-in; 
     }
-    #secret-image-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-image: url("https://i.pinimg.com/474x/be/30/b1/be30b14a02463877471e0a6030e8e9f2.jpg");
-      background-size: 75%;
-      background-repeat: no-repeat;
-      background-position: center;
-      z-index: 9999;
+
+    .shrink-away {
+      transform: scale(0);
+      opacity: 0;
+    }
+
+    #surprise-emoji {
+      font-size: 6em;
       display: none;
+      user-select: none;
+      z-index: 10;
+    }
+
+    .bounce-in {
+      display: block !important;
+      animation: smoothBounce 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    }
+
+    @keyframes smoothBounce {
+      0% { transform: scale(0); opacity: 0; }
+      60% { transform: scale(1.15); opacity: 1; }
+      80% { transform: scale(0.92); }
+      100% { transform: scale(1); }
+    }
+
+    .heart-particle {
+      position: absolute;
+      font-size: 1.5em;
+      pointer-events: none;
+      z-index: 5;
+      animation: floatUp 1.5s ease-out forwards;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translate(0, 0) scale(0.5);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--tx), var(--ty)) scale(1.2);
+        opacity: 0;
+      }
     }
   </style>
 </head>
@@ -40,13 +73,13 @@
 
   <h1 id="main-text" onclick="handleInteraction()">Wala pa nganiii</h1>
   
-  <div id="secret-image-container"></div>
+  <div id="surprise-emoji">☺️</div>
 
   <script>
-    alert("Status ko? Well...");
+    alert("Status Ko? Well...");
     
     const textElement = document.getElementById("main-text");
-    const secretImgContainer = document.getElementById("secret-image-container");
+    const surpriseEmoji = document.getElementById("surprise-emoji");
     
     textElement.style.display = "block";
 
@@ -72,10 +105,68 @@
         clickCount++;
         
         if (clickCount >= 3) {
-          secretImgContainer.style.display = "block";
-          textElement.style.display = "none";
           textElement.onclick = null; 
+          textElement.style.cursor = "default";
+          
+          setTimeout(() => {
+            alert("😐\nUm");
+            alert("😑\nThis is unnecessary");
+            alert("😕\nI've been running this website for over a month now and still no change");
+            alert("🙁\nNot just website");
+            alert("☹️\nIm gradually starting to lose hope");
+            alert("😶\nStuck in a very matter of time just looking at my imagination");
+            alert("😕\nTho, i wope we talk much if you really want");
+            alert("🙂\nYou know what?");
+            alert("😝\nForget it");
+            alert("😁\nI promised to wait for 2 years");
+            alert("😉\nSo I'm gonna make it can't let go");
+            alert("😁\nBecause maybe i could get a chance in the right time because of waiting");
+            alert("😌\nAnyways");
+            alert("🤔\nThis is kind of embarrassing");
+            alert("😁\nBut it's fine!");
+            alert("😁\nI hope you're doing good huh!");
+            alert("😉\nHope you'll go back!");
+            alert("👋\nSeeya, Dianne! sana mag haloy streak ta HAHAHAHHAHAH");
+
+            textElement.classList.add("shrink-away");
+
+            setTimeout(() => {
+              textElement.style.display = "none";
+              surpriseEmoji.classList.add("bounce-in");
+              createHeartBurst();
+            }, 500);
+          }, 50);
         }
+      }
+    }
+
+    function createHeartBurst() {
+      const hearts = ["❤️", "💖", "💝", "💕", "💘", "🌸"];
+      const burstCount = 25; 
+      
+      for (let i = 0; i < burstCount; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart-particle";
+        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 80 + Math.random() * 150;
+        const tx = Math.cos(angle) * distance + "px";
+        const ty = Math.sin(angle) * distance - 100 + "px"; 
+        
+        heart.style.setProperty("--tx", tx);
+        heart.style.setProperty("--ty", ty);
+        
+        heart.style.left = "50%";
+        heart.style.top = "50%";
+        heart.style.marginLeft = (Math.random() * 40 - 20) + "px";
+        heart.style.marginTop = (Math.random() * 40 - 20) + "px";
+        
+        document.body.appendChild(heart);
+        
+        setTimeout(() => {
+          heart.remove();
+        }, 1500);
       }
     }
   </script>
